@@ -100,23 +100,7 @@
           <span class="strength-label" [class]="strengthClass">{{ strengthLabel }}</span>
         </div>
       </div>
-      
-      <!-- Términos -->
-      <div class="form-group terms-group">
-        <label class="checkbox-label">
-          <input type="checkbox" [formControl]="terms" id="reg-terms">
-          <span>
-            Acepto los
-            <a href="#">Términos de uso</a>
-            y la
-            <a href="#">Política de privacidad</a>
-          </span>
-        </label>
-        <span class="form-error" *ngIf="terms.touched && terms.hasError('required')">
-          Debes aceptar los términos para continuar.
-        </span>
-      </div>
-
+            
       <!-- Submit -->
       <button type="submit" class="btn-primary register-submit" [disabled]="isLoading">
         <span *ngIf="!isLoading">

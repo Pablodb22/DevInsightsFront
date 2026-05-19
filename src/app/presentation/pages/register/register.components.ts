@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import {
   FormsModule, ReactiveFormsModule,
   FormBuilder, FormGroup, Validators, AbstractControl, FormControl
 } from '@angular/forms';
+import { AuthService } from '../../../data/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -14,11 +16,13 @@ import {
   styleUrls: ['./register.components.css']
 })
 export class RegisterComponent {
+  private authService = inject(AuthService);
+  private router = inject(Router);
   serverError: string | null = null;
   isLoading = false;
   
   showPassword = false;
-  showConfirmPassword = false;
+  
   
   passwordStrength = 0;
   strengthClass = 'strength-bar-0';
@@ -27,10 +31,7 @@ export class RegisterComponent {
   name = new FormControl('', [Validators.required, Validators.minLength(2)]);
   lastName = new FormControl('', [Validators.required]);
   email = new FormControl('', [Validators.required, Validators.email]);
-
-  password = new FormControl('', [Validators.required, Validators.minLength(8)]);
-  
-  terms = new FormControl(false, [Validators.requiredTrue]);
+  password = new FormControl('', [Validators.required, Validators.minLength(8)]);  
 
   form: FormGroup;
 
@@ -39,28 +40,19 @@ export class RegisterComponent {
       name: this.name,
       lastName: this.lastName,
       email: this.email,      
-      password: this.password,      
-      terms: this.terms
-    }, { validators: this.passwordsMatch });
+      password: this.password,            
+    });
 
     this.password.valueChanges.subscribe(value => {
       this.calculateStrength(value || '');
     });
   }
 
-  passwordsMatch(g: AbstractControl) {
-    const p = g.get('password')?.value;
-    const cp = g.get('confirmPassword')?.value;
-    return p === cp ? null : { passwordsMismatch: true };
-  }
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
 
-  toggleConfirmPassword(): void {
-    this.showConfirmPassword = !this.showConfirmPassword;
-  }
 
   calculateStrength(pwd: string): void {
     let score = 0;
@@ -102,9 +94,15 @@ export class RegisterComponent {
     this.isLoading = true;
     this.serverError = null;
     
-    // Simular registro
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 1500);
+    this.authService?.register(this.form.value).subscribe({
+      next: () => {
+        this.isLoading = false;    
+        this.router?.navigate(['/login']);        
+      },
+      error: (err:any) => {
+        this.isLoading = false;
+        this.serverError = err.error.message;
+      }
+    })
   }
 }
