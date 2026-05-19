@@ -1,6 +1,3 @@
-<!-- ========================================================
-     login.component.html — Inicio de sesión
-     ======================================================== -->
 <div class="login-page">
   <div class="login-card surface">
 
@@ -54,7 +51,7 @@
             [type]="showPassword ? 'text' : 'password'"
             class="form-control"
             [class.is-invalid]="password.invalid && password.touched"
-            placeholder="Mínimo 6 caracteres"
+            placeholder="Mínimo 8 caracteres"
             [formControl]="password"
             autocomplete="current-password"
           >
@@ -71,7 +68,7 @@
           La contraseña es obligatoria.
         </span>
         <span class="form-error" *ngIf="password.touched && password.hasError('minlength')">
-          Mínimo 6 caracteres.
+          Mínimo 8 caracteres.
         </span>
       </div>
 

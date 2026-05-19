@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
+import { AuthService } from '../../../data/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -11,6 +12,8 @@ import { FormsModule, ReactiveFormsModule, FormControl, Validators } from '@angu
   styleUrls: ['./login.components.css']
 })
 export class LoginComponent {
+  private authService = inject(AuthService);
+  private router = inject(Router);
   serverError: string | null = null;
   showPassword = false;
   isLoading = false;
@@ -31,9 +34,23 @@ export class LoginComponent {
     this.isLoading = true;
     this.serverError = null;
     
-    // Simular inicio de sesión
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 1500);
+    const body = {email: this.email.value, password: this.password.value};
+    this.authService.login(body).subscribe({
+        next:(response)=>{
+          if(response.ok==true){
+            this.isLoading = false;            
+            localStorage.setItem('token', response.data);
+            this.router.navigate(['/dashboard']);
+          }else{
+            this.isLoading = false;
+            alert(response.message);            
+          }       
+
+        },
+        error:(error)=>{
+            this.isLoading = false;
+            this.serverError = error.error.message;
+        }
+    })
   }
 }
