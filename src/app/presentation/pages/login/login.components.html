@@ -1,0 +1,116 @@
+<!-- ========================================================
+     login.component.html — Inicio de sesión
+     ======================================================== -->
+<div class="login-page">
+  <div class="login-card surface">
+
+    <!-- Logo / Brand -->
+    <div class="login-brand">
+      <i class="bi bi-bar-chart-fill"></i>
+      <span class="font-mono">DevInsights</span>
+    </div>
+
+    <h1 class="login-title">Bienvenido de nuevo</h1>
+    <p class="login-subtitle text-muted">Inicia sesión para ver tus estadísticas.</p>
+
+    <!-- Error de servidor -->
+    <div class="server-error" *ngIf="serverError" role="alert">
+      <i class="bi bi-exclamation-circle"></i>
+      {{ serverError }}
+    </div>
+
+    <!-- Formulario -->
+    <form (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label" for="login-email">Correo electrónico</label>
+        <input
+          id="login-email"
+          type="email"
+          class="form-control"
+          [class.is-invalid]="email.invalid && email.touched"
+          placeholder="tu@email.com"
+          [formControl]="email"
+          autocomplete="email"
+        >
+        <span class="form-error" *ngIf="email.touched && email.hasError('required')">
+          El correo es obligatorio.
+        </span>
+        <span class="form-error" *ngIf="email.touched && email.hasError('email')">
+          Introduce un correo válido.
+        </span>
+      </div>
+
+      <!-- Contraseña -->
+      <div class="form-group">
+        <div class="login-label-row">
+          <label class="form-label" for="login-password">Contraseña</label>
+          <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+        </div>
+        <div class="input-wrapper">
+          <input
+            id="login-password"
+            [type]="showPassword ? 'text' : 'password'"
+            class="form-control"
+            [class.is-invalid]="password.invalid && password.touched"
+            placeholder="Mínimo 6 caracteres"
+            [formControl]="password"
+            autocomplete="current-password"
+          >
+          <button
+            type="button"
+            class="input-icon-right"
+            (click)="togglePassword()"
+            [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          >
+            <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+          </button>
+        </div>
+        <span class="form-error" *ngIf="password.touched && password.hasError('required')">
+          La contraseña es obligatoria.
+        </span>
+        <span class="form-error" *ngIf="password.touched && password.hasError('minlength')">
+          Mínimo 6 caracteres.
+        </span>
+      </div>
+
+      <!-- Submit -->
+      <button
+        type="submit"
+        class="btn-primary login-submit"
+        [disabled]="isLoading"
+      >
+        <span *ngIf="!isLoading">
+          <i class="bi bi-box-arrow-in-right"></i>
+          Iniciar sesión
+        </span>
+        <span *ngIf="isLoading">
+          <span class="spinner" aria-hidden="true"></span>
+          Verificando...
+        </span>
+      </button>
+
+    </form>
+
+    <!-- Separador -->
+    <div class="separator">
+      <span>o continuar con</span>
+    </div>
+
+    <!-- Placeholder redes (sin funcionalidad) -->
+    <div class="social-row">
+      <button class="social-btn" type="button">
+        <i class="bi bi-github"></i>
+        GitHub
+      </button>
+    </div>
+
+    <!-- Enlace a registro -->
+    <p class="login-register-link">
+      ¿Sin cuenta aún?
+      <a routerLink="/register">Crea una gratis</a>
+    </p>
+
+  </div>
+</div>

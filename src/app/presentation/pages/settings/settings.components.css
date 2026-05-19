@@ -1,0 +1,173 @@
+/* ============================================================
+   settings.component.css
+   ============================================================ */
+
+.settings-page {
+  min-height: calc(100vh - var(--nav-height));
+  background: var(--color-bg);
+  padding: var(--sp-4) var(--sp-3);
+}
+
+.settings-container {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+/* Cabecera de página */
+.settings-header {
+  margin-bottom: var(--sp-4);
+}
+.settings-title {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/* ── Secciones ──────────────────────────────────────────────── */
+.settings-section {
+  margin-bottom: var(--sp-3);
+  padding: var(--sp-3);
+}
+
+.settings-section-head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-2);
+}
+.settings-section-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-accent-soft);
+  border-radius: var(--radius-input);
+  color: var(--color-accent);
+  font-size: 18px;
+}
+.settings-section-title {
+  font-size: var(--text-md);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+/* ── Layout perfil ──────────────────────────────────────────── */
+.profile-layout {
+  display: flex;
+  gap: var(--sp-4);
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+/* Avatar col */
+.avatar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  flex-shrink: 0;
+  min-width: 120px;
+}
+
+.settings-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-lg);
+  font-weight: 600;
+  font-family: var(--font-sans);
+}
+
+.avatar-change-btn {
+  font-size: var(--text-xs);
+  padding: 6px 12px;
+}
+.avatar-hint {
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Formulario perfil */
+.profile-form {
+  flex: 1;
+  min-width: 280px;
+}
+
+/* Fila 2 cols */
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-2);
+}
+@media (max-width: 500px) {
+  .form-row-2 { grid-template-columns: 1fr; }
+}
+
+/* ── Seguridad form ──────────────────────────────────────────── */
+.security-form { max-width: 100%; }
+
+/* ── Token section ──────────────────────────────────────────── */
+.token-section {}
+
+.token-help {
+  margin-top: 8px;
+  line-height: 1.6;
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+}
+.token-help i { margin-top: 2px; flex-shrink: 0; }
+.token-help code {
+  font-family: var(--font-mono);
+  background: var(--color-bg);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 11px;
+  color: var(--color-accent);
+}
+
+/* ── Acciones de formulario ──────────────────────────────────── */
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+.save-success {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--text-sm);
+  color: var(--color-success);
+  font-weight: 500;
+}
+.save-success i { font-size: 15px; }
+
+/* Spinner */
+.spinner-sm {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-right: 5px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .settings-page { padding: var(--sp-2); }
+  .profile-layout { flex-direction: column; gap: var(--sp-3); }
+  .avatar-col     { flex-direction: row; min-width: auto; width: 100%; }
+}

@@ -1,0 +1,185 @@
+<!-- ========================================================
+     dashboard.component.html — Panel principal
+     ======================================================== -->
+<div class="dashboard-layout">
+
+  <!-- ── Sidebar ─────────────────────────────────────────── -->
+  <aside class="sidebar">
+
+    <!-- Usuario -->
+    <div class="sidebar-user">
+      <div class="sidebar-avatar">{{ userInitials }}</div>
+      <div class="sidebar-user-info">
+        <span class="sidebar-user-name">{{ userName }}</span>
+        <span class="sidebar-user-email">{{ userEmail }}</span>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Navegación -->
+    <nav class="sidebar-nav" aria-label="Navegación principal">
+      <a
+        *ngFor="let item of navItems"
+        [routerLink]="item.route"
+        class="sidebar-nav-item"
+        [class.active]="item.active"
+      >
+        <i [class]="'bi ' + item.icon"></i>
+        {{ item.label }}
+      </a>
+    </nav>
+
+    <!-- Footer del sidebar -->
+    <div class="sidebar-footer">
+      <span class="font-mono text-xs text-muted">DevInsights v1.0</span>
+    </div>
+  </aside>
+
+  <!-- ── Contenido principal ─────────────────────────────── -->
+  <main class="dashboard-main">
+
+    <!-- Cabecera -->
+    <div class="dashboard-header">
+      <div>
+        <h1 class="dashboard-title">Dashboard</h1>
+        <p class="text-muted text-sm">Bienvenido de nuevo, {{ userName.split(' ')[0] }}.</p>
+      </div>
+    </div>
+
+    <!-- ── Añadir repositorio ──────────────────────────── -->
+    <section class="add-repo-section surface">
+      <div class="add-repo-inner">
+        <div class="add-repo-label">
+          <i class="bi bi-plus-circle"></i>
+          <div>
+            <span class="add-repo-title">Analizar repositorio</span>
+            <span class="add-repo-hint">Introduce el nombre en formato <code>usuario/repositorio</code></span>
+          </div>
+        </div>
+        <div class="add-repo-form">
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="repoInput"
+            placeholder="ej: angular/angular"
+            (keydown.enter)="analyzeRepo()"
+          >
+          <button
+            class="btn-primary"
+            (click)="analyzeRepo()"
+            [disabled]="isAnalyzing || !repoInput.trim()"
+          >
+            <span *ngIf="!isAnalyzing">
+              <i class="bi bi-search"></i>
+              Analizar
+            </span>
+            <span *ngIf="isAnalyzing">
+              <span class="spinner-sm"></span>
+              Analizando...
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Métricas globales ───────────────────────────── -->
+    <section class="metrics-section">
+      <h2 class="section-title">Estadísticas globales</h2>
+      <div class="metrics-grid">
+        <div class="metric-card surface" *ngFor="let m of metrics">
+          <div class="metric-icon">
+            <i [class]="'bi ' + m.icon"></i>
+          </div>
+          <div class="metric-value font-mono">{{ m.value }}{{ m.suffix }}</div>
+          <div class="metric-label text-muted text-xs">{{ m.label }}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Repositorios ────────────────────────────────── -->
+    <section class="repos-section">
+      <div class="section-heading-row">
+        <h2 class="section-title">Mis repositorios</h2>
+        <span class="text-muted text-xs">{{ repos.length }} repositorios</span>
+      </div>
+
+      <div class="repos-grid">
+        <div class="repo-card surface" *ngFor="let repo of repos">
+
+          <!-- Cabecera repo -->
+          <div class="repo-card-header">
+            <a [href]="repo.url" target="_blank" class="repo-name">
+              <i class="bi bi-folder2"></i>
+              {{ repo.name }}
+            </a>
+            <a [href]="repo.url" target="_blank" class="btn-ghost" title="Abrir en GitHub">
+              <i class="bi bi-box-arrow-up-right" style="font-size: 13px;"></i>
+            </a>
+          </div>
+
+          <!-- Descripción -->
+          <p class="repo-desc text-muted text-sm">{{ repo.description }}</p>
+
+          <!-- Meta info -->
+          <div class="repo-meta">
+            <span class="badge-lang">
+              <span
+                class="lang-dot"
+                [style.background]="repo.langColor"
+              ></span>
+              {{ repo.language }}
+            </span>
+            <span class="repo-stat">
+              <i class="bi bi-star"></i>
+              {{ formatStars(repo.stars) }}
+            </span>
+            <span class="repo-stat">
+              <i class="bi bi-git"></i>
+              {{ repo.forks }}
+            </span>
+          </div>
+
+          <!-- Último commit -->
+          <div class="repo-commit text-xs text-muted">
+            <i class="bi bi-clock-history"></i>
+            Último commit {{ repo.lastCommit }}
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Actividad de commits ────────────────────────── -->
+    <section class="activity-section">
+      <h2 class="section-title">Actividad de commits — últimos 12 meses</h2>
+      <div class="activity-card surface">
+        <!--
+          INTEGRACIÓN CHART.JS:
+          Reemplaza este bloque con un <canvas id="activityChart"></canvas>
+          y en el componente.ts usa Chart.js para renderizar un BarChart con
+          los datos de activityBars[].
+          Ejemplo: new Chart(canvas, { type: 'bar', data: { ... } })
+        -->
+        <div class="activity-chart">
+          <div class="chart-bars">
+            <div
+              class="chart-bar-col"
+              *ngFor="let bar of activityBars"
+            >
+              <div class="chart-bar-track">
+                <div
+                  class="chart-bar-fill"
+                  [style.height.%]="barHeightPercent(bar)"
+                  [title]="bar.value + ' commits'"
+                ></div>
+              </div>
+              <span class="chart-bar-label">{{ bar.label }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>

@@ -1,0 +1,21 @@
+/* app.component.css
+   Los estilos de la navbar están definidos en global.css.
+   Este archivo contiene solo overrides o estilos exclusivos del app root. */
+
+/* Cerrar dropdown al hacer click fuera — manejado vía JS/Angular */
+/* El overlay invisible que captura clicks fuera del dropdown */
+.navbar-dropdown-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+}
+
+/* Botón dentro del dropdown que necesita reset de estilos de button */
+.navbar-dropdown-item.danger {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+}

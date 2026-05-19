@@ -1,0 +1,140 @@
+
+<div class="register-page">
+  <div class="register-card surface">
+
+    <!-- Brand -->
+    <div class="register-brand">
+      <i class="bi bi-bar-chart-fill"></i>
+      <span class="font-mono">DevInsights</span>
+    </div>
+
+    <h1 class="register-title">Crea tu cuenta</h1>
+    <p class="register-subtitle text-muted">Gratis para siempre en el plan básico.</p>
+
+    <!-- Error servidor -->
+    <div class="server-error" *ngIf="serverError" role="alert">
+      <i class="bi bi-exclamation-circle"></i>
+      {{ serverError }}
+    </div>
+
+    <form (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- Nombre + Apellidos en fila -->
+      <div class="form-row-2">
+        <div class="form-group">
+          <label class="form-label" for="reg-name">Nombre</label>
+          <input
+            id="reg-name"
+            type="text"
+            class="form-control"
+            [class.is-invalid]="name.invalid && name.touched"
+            placeholder="Carlos"
+            [formControl]="name"
+            autocomplete="given-name"
+          >
+          <span class="form-error" *ngIf="name.touched && name.hasError('required')">Obligatorio.</span>
+          <span class="form-error" *ngIf="name.touched && name.hasError('minlength')">Mínimo 2 caracteres.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-lastname">Apellidos</label>
+          <input
+            id="reg-lastname"
+            type="text"
+            class="form-control"
+            [class.is-invalid]="lastName.invalid && lastName.touched"
+            placeholder="López García"
+            [formControl]="lastName"
+            autocomplete="family-name"
+          >
+          <span class="form-error" *ngIf="lastName.touched && lastName.hasError('required')">Obligatorio.</span>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label" for="reg-email">Correo electrónico</label>
+        <input
+          id="reg-email"
+          type="email"
+          class="form-control"
+          [class.is-invalid]="email.invalid && email.touched"
+          placeholder="tu@email.com"
+          [formControl]="email"
+          autocomplete="email"
+        >
+        <span class="form-error" *ngIf="email.touched && email.hasError('required')">El correo es obligatorio.</span>
+        <span class="form-error" *ngIf="email.touched && email.hasError('email')">Introduce un correo válido.</span>
+      </div>
+      
+      <!-- Contraseña -->
+      <div class="form-group">
+        <label class="form-label" for="reg-password">Contraseña</label>
+        <div class="input-wrapper">
+          <input
+            id="reg-password"
+            [type]="showPassword ? 'text' : 'password'"
+            class="form-control"
+            [class.is-invalid]="password.invalid && password.touched"
+            placeholder="Mínimo 8 caracteres"
+            [formControl]="password"
+            autocomplete="new-password"
+          >
+          <button type="button" class="input-icon-right" (click)="togglePassword()"
+                  [attr.aria-label]="showPassword ? 'Ocultar' : 'Mostrar'">
+            <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+          </button>
+        </div>
+        <span class="form-error" *ngIf="password.touched && password.hasError('required')">Obligatoria.</span>
+        <span class="form-error" *ngIf="password.touched && password.hasError('minlength')">Mínimo 8 caracteres.</span>
+
+        <!-- Indicador de fortaleza -->
+        <div class="strength-bar-wrap" *ngIf="password.value">
+          <div class="strength-bar">
+            <div
+              class="strength-fill"
+              [class]="strengthClass"
+              [style.width.%]="passwordStrength * 25"
+            ></div>
+          </div>
+          <span class="strength-label" [class]="strengthClass">{{ strengthLabel }}</span>
+        </div>
+      </div>
+      
+      <!-- Términos -->
+      <div class="form-group terms-group">
+        <label class="checkbox-label">
+          <input type="checkbox" [formControl]="terms" id="reg-terms">
+          <span>
+            Acepto los
+            <a href="#">Términos de uso</a>
+            y la
+            <a href="#">Política de privacidad</a>
+          </span>
+        </label>
+        <span class="form-error" *ngIf="terms.touched && terms.hasError('required')">
+          Debes aceptar los términos para continuar.
+        </span>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn-primary register-submit" [disabled]="isLoading">
+        <span *ngIf="!isLoading">
+          <i class="bi bi-person-check"></i>
+          Crear cuenta
+        </span>
+        <span *ngIf="isLoading">
+          <span class="spinner"></span>
+          Creando...
+        </span>
+      </button>
+
+    </form>
+
+    <p class="register-login-link">
+      ¿Ya tienes cuenta?
+      <a routerLink="/login">Inicia sesión</a>
+    </p>
+
+  </div>
+</div>

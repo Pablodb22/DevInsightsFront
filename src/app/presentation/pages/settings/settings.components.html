@@ -1,0 +1,267 @@
+
+<!-- ========================================================
+     settings.component.html — Configuración de perfil
+     ======================================================== -->
+<div class="settings-page">
+  <div class="settings-container">
+
+    <!-- Cabecera -->
+    <div class="settings-header">
+      <h1 class="settings-title">Configuración</h1>
+      <p class="text-muted text-sm">Gestiona tu perfil, seguridad y conexiones externas.</p>
+    </div>
+
+    <!-- ── SECCIÓN PERFIL ──────────────────────────────── -->
+    <section class="settings-section surface">
+      <div class="settings-section-head">
+        <div class="settings-section-icon">
+          <i class="bi bi-person"></i>
+        </div>
+        <div>
+          <h2 class="settings-section-title">Perfil</h2>
+          <p class="text-muted text-xs">Tu información personal visible en la plataforma.</p>
+        </div>
+      </div>
+      <hr class="divider">
+
+      <div class="profile-layout">
+        <!-- Avatar -->
+        <div class="avatar-col">
+          <div class="settings-avatar">{{ userInitials }}</div>
+          <button class="btn-secondary avatar-change-btn" type="button">
+            <i class="bi bi-camera"></i>
+            Cambiar foto
+          </button>
+          <p class="avatar-hint text-xs text-muted">JPG, PNG, WebP. Máx 2MB.</p>
+        </div>
+
+        <!-- Formulario -->
+        <form class="profile-form" (ngSubmit)="onSaveProfile()" novalidate>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="s-name">Nombre</label>
+              <input
+                id="s-name"
+                type="text"
+                class="form-control"
+                [class.is-invalid]="name.invalid && name.touched"
+                [formControl]="name"
+              >
+              <span class="form-error" *ngIf="name.touched && name.hasError('required')">Obligatorio.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="s-last">Apellidos</label>
+              <input
+                id="s-last"
+                type="text"
+                class="form-control"
+                [class.is-invalid]="lastName.invalid && lastName.touched"
+                [formControl]="lastName"
+              >
+              <span class="form-error" *ngIf="lastName.touched && lastName.hasError('required')">Obligatorio.</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="s-email">Correo electrónico</label>
+            <input
+              id="s-email"
+              type="email"
+              class="form-control"
+              [class.is-invalid]="email.invalid && email.touched"
+              [formControl]="email"
+            >
+            <span class="form-error" *ngIf="email.touched && email.hasError('email')">Correo inválido.</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="s-location">
+              Ubicación
+              <span style="font-size: var(--text-xs); color: var(--color-text-muted); font-weight: 400;">(opcional)</span>
+            </label>
+            <div class="input-wrapper">
+              <input
+                id="s-location"
+                type="text"
+                class="form-control"
+                placeholder="Ciudad, País"
+                [formControl]="location"
+              >
+              <span class="input-icon-right" style="pointer-events: none;">
+                <i class="bi bi-geo-alt"></i>
+              </span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <div class="save-success" *ngIf="savedProfile">
+              <i class="bi bi-check-circle-fill"></i>
+              Cambios guardados correctamente.
+            </div>
+            <button type="submit" class="btn-primary" [disabled]="savingProfile">
+              <span *ngIf="!savingProfile">
+                <i class="bi bi-floppy"></i>
+                Guardar cambios
+              </span>
+              <span *ngIf="savingProfile">
+                <span class="spinner-sm"></span>
+                Guardando...
+              </span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ── SECCIÓN SEGURIDAD ───────────────────────────── -->
+    <section class="settings-section surface">
+      <div class="settings-section-head">
+        <div class="settings-section-icon">
+          <i class="bi bi-shield-lock"></i>
+        </div>
+        <div>
+          <h2 class="settings-section-title">Seguridad</h2>
+          <p class="text-muted text-xs">Actualiza tu contraseña de acceso.</p>
+        </div>
+      </div>
+      <hr class="divider">
+
+      <form class="security-form" (ngSubmit)="onSavePassword()" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="s-curpwd">Contraseña actual</label>
+          <div class="input-wrapper">
+            <input
+              id="s-curpwd"
+              [type]="showCurrentPwd ? 'text' : 'password'"
+              class="form-control"
+              [class.is-invalid]="currentPwd.invalid && currentPwd.touched"
+              [formControl]="currentPwd"
+              autocomplete="current-password"
+            >
+            <button type="button" class="input-icon-right" (click)="showCurrentPwd = !showCurrentPwd">
+              <i [class]="showCurrentPwd ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            </button>
+          </div>
+          <span class="form-error" *ngIf="currentPwd.touched && currentPwd.hasError('required')">Obligatoria.</span>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label" for="s-newpwd">Nueva contraseña</label>
+            <div class="input-wrapper">
+              <input
+                id="s-newpwd"
+                [type]="showNewPwd ? 'text' : 'password'"
+                class="form-control"
+                [class.is-invalid]="newPwd.invalid && newPwd.touched"
+                [formControl]="newPwd"
+                autocomplete="new-password"
+              >
+              <button type="button" class="input-icon-right" (click)="showNewPwd = !showNewPwd">
+                <i [class]="showNewPwd ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+              </button>
+            </div>
+            <span class="form-error" *ngIf="newPwd.touched && newPwd.hasError('minlength')">Mínimo 8 caracteres.</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="s-conpwd">Confirmar nueva</label>
+            <div class="input-wrapper">
+              <input
+                id="s-conpwd"
+                [type]="showConfirmPwd ? 'text' : 'password'"
+                class="form-control"
+                [class.is-invalid]="confirmPwd.touched && securityForm.hasError('mismatch')"
+                [formControl]="confirmPwd"
+                autocomplete="new-password"
+              >
+              <button type="button" class="input-icon-right" (click)="showConfirmPwd = !showConfirmPwd">
+                <i [class]="showConfirmPwd ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+              </button>
+            </div>
+            <span class="form-error" *ngIf="confirmPwd.touched && securityForm.hasError('mismatch')">
+              Las contraseñas no coinciden.
+            </span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <div class="save-success" *ngIf="savedPassword">
+            <i class="bi bi-check-circle-fill"></i>
+            Contraseña actualizada.
+          </div>
+          <button type="submit" class="btn-primary" [disabled]="savingPassword">
+            <span *ngIf="!savingPassword">
+              <i class="bi bi-lock"></i>
+              Actualizar contraseña
+            </span>
+            <span *ngIf="savingPassword">
+              <span class="spinner-sm"></span>
+              Actualizando...
+            </span>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ── SECCIÓN TOKEN GITHUB ────────────────────────── -->
+    <section class="settings-section surface">
+      <div class="settings-section-head">
+        <div class="settings-section-icon">
+          <i class="bi bi-github"></i>
+        </div>
+        <div>
+          <h2 class="settings-section-title">Token de GitHub</h2>
+          <p class="text-muted text-xs">Necesario para acceder a repositorios privados.</p>
+        </div>
+      </div>
+      <hr class="divider">
+
+      <div class="token-section">
+        <div class="form-group" style="max-width: 480px;">
+          <label class="form-label" for="s-token">Personal Access Token (PAT)</label>
+          <div class="input-wrapper">
+            <input
+              id="s-token"
+              [type]="showToken ? 'text' : 'password'"
+              class="form-control"
+              [class.is-invalid]="!!tokenError"
+              [(ngModel)]="githubToken"
+              placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+              autocomplete="off"
+            >
+            <button type="button" class="input-icon-right" (click)="showToken = !showToken">
+              <i [class]="showToken ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            </button>
+          </div>
+          <span class="form-error" *ngIf="tokenError">{{ tokenError }}</span>
+          <p class="token-help text-xs text-muted">
+            <i class="bi bi-info-circle"></i>
+            Genera tu token en
+            <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">
+              GitHub &rsaquo; Settings &rsaquo; Developer settings &rsaquo; Personal access tokens
+            </a>.
+            Permisos recomendados: <code>repo</code>, <code>read:user</code>.
+          </p>
+        </div>
+
+        <div class="form-actions">
+          <div class="save-success" *ngIf="savedToken">
+            <i class="bi bi-check-circle-fill"></i>
+            Token guardado correctamente.
+          </div>
+          <button type="button" class="btn-primary" (click)="onSaveToken()" [disabled]="savingToken">
+            <span *ngIf="!savingToken">
+              <i class="bi bi-key"></i>
+              Guardar token
+            </span>
+            <span *ngIf="savingToken">
+              <span class="spinner-sm"></span>
+              Guardando...
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>

@@ -1,0 +1,108 @@
+<!-- ========================================================
+     landing.component.html — Página de presentación
+     ======================================================== -->
+
+<!-- ── HERO ──────────────────────────────────────────────── -->
+<section class="hero">
+  <!-- Fondo geométrico SVG -->
+  <div class="hero-bg" aria-hidden="true">
+    <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <rect x="700" y="-60" width="320" height="320" rx="8" fill="#E8EEF7" opacity="0.6" transform="rotate(18 860 100)"/>
+      <rect x="600" y="260" width="180" height="180" rx="8" fill="#D6E4F0" opacity="0.4" transform="rotate(-12 690 350)"/>
+      <circle cx="80"  cy="80"  r="120" fill="#EBF0F8" opacity="0.5"/>
+      <circle cx="820" cy="420" r="80"  fill="#D6E4F0" opacity="0.35"/>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <i class="bi bi-bar-chart-fill"></i>
+      Estadísticas de GitHub, sin complicaciones
+    </div>
+
+    <h1 class="hero-headline">
+      Entiende tus repositorios.<br>
+      <span class="hero-headline-accent">Mejora tu código.</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      DevInsights conecta con la API de GitHub y transforma los datos
+      de tus repositorios en visualizaciones claras y accionables.
+    </p>
+
+    <div class="hero-ctas">
+      <a routerLink="/register" class="btn-primary">
+        <i class="bi bi-person-plus"></i>
+        Crear cuenta gratis
+      </a>
+      <a routerLink="/dashboard" class="btn-secondary">
+        <i class="bi bi-play-circle"></i>
+        Ver demo
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES ──────────────────────────────────────────── -->
+<section class="features-section">
+  <div class="section-container">
+    <div class="section-header">
+      <h2>Todo lo que necesitas para analizar tu código</h2>
+      <p>Sin configuraciones complejas. Conecta, analiza y decide.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card" *ngFor="let f of features">
+        <div class="feature-icon">
+          <i [class]="'bi ' + f.icon"></i>
+        </div>
+        <h3 class="feature-title">{{ f.title }}</h3>
+        <p class="feature-desc">{{ f.desc }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CÓMO FUNCIONA ──────────────────────────────────────── -->
+<section class="how-section">
+  <div class="section-container">
+    <div class="section-header">
+      <h2>Cómo funciona</h2>
+      <p>Tres pasos para tener tus estadísticas listas.</p>
+    </div>
+
+    <div class="steps-row">
+      <div class="step-item" *ngFor="let s of steps; let last = last">
+        <div class="step-num">{{ s.num }}</div>
+        <div class="step-body">
+          <h3 class="step-title">{{ s.title }}</h3>
+          <p class="step-desc">{{ s.desc }}</p>
+        </div>
+        <div class="step-connector" *ngIf="!last" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA FINAL ──────────────────────────────────────────── -->
+<section class="cta-section">
+  <div class="cta-card surface">
+    <i class="bi bi-github cta-icon"></i>
+    <h2>Empieza a analizar hoy mismo</h2>
+    <p>Conecta tu cuenta de GitHub en menos de un minuto.</p>
+    <a routerLink="/register" class="btn-primary">
+      <i class="bi bi-arrow-right-circle"></i>
+      Comenzar ahora
+    </a>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────────── -->
+<footer class="landing-footer">
+  <span class="font-mono" style="color: var(--color-text-muted);">DevInsights</span>
+  <span class="text-muted text-xs">
+    &copy; {{ currentYear }} — Hecho con
+    <i class="bi bi-heart-fill" style="color: var(--color-error);"></i>
+    y la API de GitHub
+  </span>
+</footer>

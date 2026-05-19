@@ -1,0 +1,173 @@
+/* ============================================================
+   register.component.css
+   ============================================================ */
+
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+  padding: var(--sp-3);
+}
+
+.register-card {
+  width: 100%;
+  max-width: 480px;
+  padding: var(--sp-4);
+}
+
+/* Brand */
+.register-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  color: var(--color-text);
+}
+.register-brand i {
+  font-size: 1.5rem;
+  color: var(--color-accent);
+}
+
+.register-title {
+  text-align: center;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.register-subtitle {
+  text-align: center;
+  font-size: var(--text-sm);
+  margin-bottom: var(--sp-3);
+}
+
+/* Error servidor */
+.server-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFF0F0;
+  border: 1px solid #F5C6C6;
+  border-radius: var(--radius-input);
+  padding: 10px 14px;
+  font-size: var(--text-sm);
+  color: var(--color-error);
+  margin-bottom: var(--sp-2);
+}
+
+/* Fila de 2 columnas */
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-2);
+}
+@media (max-width: 440px) {
+  .form-row-2 { grid-template-columns: 1fr; }
+}
+
+/* Label opcional */
+.form-label-optional {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+/* ── Indicador de fortaleza ─────────────────────────────────── */
+.strength-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.strength-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--color-border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.strength-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.25s ease, background 0.25s ease;
+}
+.strength-fill.weak    { background: var(--color-error); }
+.strength-fill.fair    { background: #C08500; }
+.strength-fill.good    { background: #2D6A4F; }
+.strength-fill.strong  { background: #1A4731; }
+
+.strength-label {
+  font-size: var(--text-xs);
+  font-weight: 500;
+  min-width: 56px;
+  text-align: right;
+}
+.strength-label.weak   { color: var(--color-error); }
+.strength-label.fair   { color: #C08500; }
+.strength-label.good   { color: var(--color-success); }
+.strength-label.strong { color: #1A4731; }
+
+/* ── Checkbox términos ──────────────────────────────────────── */
+.terms-group { margin-top: var(--sp-1); }
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  line-height: 1.5;
+}
+.checkbox-label input[type="checkbox"] {
+  margin-top: 2px;
+  accent-color: var(--color-accent);
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+.checkbox-label a {
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+/* Submit */
+.register-submit {
+  width: 100%;
+  justify-content: center;
+  padding: 12px;
+  margin-top: var(--sp-2);
+}
+.register-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+
+/* Spinner */
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-right: 6px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Link login */
+.register-login-link {
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin: var(--sp-3) 0 0;
+}
+.register-login-link a {
+  color: var(--color-accent);
+  font-weight: 500;
+}
