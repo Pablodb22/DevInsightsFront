@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import {
   FormsModule, ReactiveFormsModule,
   FormBuilder, FormGroup, Validators, AbstractControl, FormControl
@@ -13,7 +13,7 @@ import {
   templateUrl: './settings.components.html',
   styleUrls: ['./settings.components.css']
 })
-export class SettingsComponent {
+export class SettingsComponent implements OnInit {
   // Estados de guardado
   savingProfile   = false;
   savedProfile    = false;
@@ -39,12 +39,15 @@ export class SettingsComponent {
   githubToken = '';
   tokenError  = '';
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute
+  ) {
     this.profileForm = this.fb.group({
-      name:     ['Carlos',           [Validators.required, Validators.minLength(2)]],
-      lastName: ['López García',     [Validators.required]],
-      email:    ['carlos@ejemplo.com',[Validators.required, Validators.email]],
-      location: ['Madrid, España',   []]
+      name:     ['', [Validators.required, Validators.minLength(2)]],
+      lastName: ['', [Validators.required]],
+      email:    ['', [Validators.required, Validators.email]],
+      location: ['', []]
     });
 
     this.securityForm = this.fb.group(
@@ -55,6 +58,25 @@ export class SettingsComponent {
       },
       { validators: this.passwordsMatch }
     );
+  }
+
+  ngOnInit(): void {
+    this.route.data.subscribe(({ user }) => {
+      if (user) {
+        this.profileForm.patchValue({
+          name: user.name || '',
+          lastName: user.lastName || '',
+          email: user.email || '',
+          location: user.location || ''
+        });
+
+        this.githubToken = user.githubToken || '';
+
+        const firstLetter = user.name?.[0] || '';
+        const secondLetter = user.lastName?.[0] || '';
+        this.userInitials = (firstLetter + secondLetter).toUpperCase() || 'CL';
+      }
+    });
   }
 
   // Getters perfil
