@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import {
   FormsModule, ReactiveFormsModule,
   FormBuilder, FormGroup, Validators, AbstractControl, FormControl
 } from '@angular/forms';
+import { UserService } from '../../../data/services/user.service';
 
 @Component({
   selector: 'app-settings',
@@ -14,6 +15,9 @@ import {
   styleUrls: ['./settings.components.css']
 })
 export class SettingsComponent implements OnInit {
+
+  private UserService=inject(UserService);
+
   // Estados de guardado
   savingProfile   = false;
   savedProfile    = false;
@@ -21,7 +25,7 @@ export class SettingsComponent implements OnInit {
   savedPassword   = false;
   savingToken     = false;
   savedToken      = false;
-
+  
   showCurrentPwd  = false;
   showNewPwd      = false;
   showConfirmPwd  = false;
@@ -55,9 +59,7 @@ export class SettingsComponent implements OnInit {
         currentPassword: ['', [Validators.required]],
         newPassword:     ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', [Validators.required]]
-      },
-      { validators: this.passwordsMatch }
-    );
+      });
   }
 
   ngOnInit(): void {
@@ -90,33 +92,58 @@ export class SettingsComponent implements OnInit {
   get newPwd()      { return this.securityForm.get('newPassword') as FormControl; }
   get confirmPwd()  { return this.securityForm.get('confirmPassword') as FormControl; }
 
-  passwordsMatch(g: AbstractControl) {
-    const nw = g.get('newPassword')?.value;
-    const cf = g.get('confirmPassword')?.value;
-    return nw === cf ? null : { mismatch: true };
-  }
 
   onSaveProfile(): void {
     if (this.profileForm.invalid) { this.profileForm.markAllAsTouched(); return; }
-    this.savingProfile = true;
-    // TODO: AuthService.updateProfile(this.profileForm.value)
-    setTimeout(() => {
-      this.savingProfile = false;
-      this.savedProfile  = true;
-      setTimeout(() => this.savedProfile = false, 2500);
-    }, 900);
+    this.savingProfile = true;    
+
+    const data={
+      name: this.name.value,
+      lastName: this.lastName.value,
+      email: this.email.value,
+      location: this.location.value
+    }
+
+    this.UserService.updateUser(data).subscribe({
+      next: (response) => {
+        console.log('Perfil actualizado:', response);
+        this.savingProfile = false;
+        this.savedProfile  = true;
+      },
+      error: (error) => {
+        this.savingProfile = true;
+        this.savedProfile  = false;
+        console.error('Error al actualizar el perfil:', error);
+      }
+    });                
   }
 
   onSavePassword(): void {
     if (this.securityForm.invalid) { this.securityForm.markAllAsTouched(); return; }
-    this.savingPassword = true;
-    // TODO: AuthService.changePassword(...)
-    setTimeout(() => {
-      this.savingPassword = false;
-      this.savedPassword  = true;
-      this.securityForm.reset();
-      setTimeout(() => this.savedPassword = false, 2500);
-    }, 900);
+    this.savingPassword = true;    
+    
+    const data={
+      email: this.email.value,
+      currentPassword: this.currentPwd.value,
+      newPassword: this.newPwd.value,
+      confirmPassword: this.confirmPwd.value,      
+    }
+
+    this.UserService.updatePass(data).subscribe({
+      next: (response) => {
+        console.log('Contraseña actualizada:', response);
+         this.savingPassword = false;
+         this.savedPassword  = true;
+         this.securityForm.reset();
+      },
+      error: (error) => {
+        this.savingPassword = true;
+        this.savedPassword  = false;
+        console.error('Error al actualizar la contraseña:', error);
+      }
+    });
+     
+      
   }
 
   onSaveToken(): void {
@@ -126,11 +153,25 @@ export class SettingsComponent implements OnInit {
     }
     this.tokenError   = '';
     this.savingToken  = true;
-    // TODO: GithubService.setToken(this.githubToken)
-    setTimeout(() => {
-      this.savingToken  = false;
-      this.savedToken   = true;
-      setTimeout(() => this.savedToken = false, 2500);
-    }, 700);
+    
+    const data={
+      email: this.email.value,
+      githubToken: this.githubToken.trim()
+    }
+
+    this.UserService.updateToken(data).subscribe({
+      next: (response) => {
+        console.log('Token actualizado:', response);
+        this.savingToken = false;
+        this.savedToken  = true;
+      },
+      error: (error) => {
+        this.savingToken = true;
+        this.savedToken  = false;
+        console.error('Error al actualizar el token:', error);
+      }
+    });
+      
+      
   }
 }

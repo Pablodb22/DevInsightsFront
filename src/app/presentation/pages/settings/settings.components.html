@@ -3,8 +3,8 @@
 
     <!-- Cabecera -->
     <div class="settings-header">
-      <h1 class="settings-title">Configuración</h1>
-      <p class="text-muted text-sm">Gestiona tu perfil, seguridad y conexiones externas.</p>
+      <h1 class="settings-title">Mi Información</h1>
+      <p class="text-muted text-sm">Tu información personal en la plataforma.</p>
     </div>
 
     <!-- ── SECCIÓN PERFIL ──────────────────────────────── -->
@@ -23,12 +23,7 @@
       <div class="profile-layout">
         <!-- Avatar -->
         <div class="avatar-col">
-          <div class="settings-avatar">{{ userInitials }}</div>
-          <button class="btn-secondary avatar-change-btn" type="button">
-            <i class="bi bi-camera"></i>
-            Cambiar foto
-          </button>
-          <p class="avatar-hint text-xs text-muted">JPG, PNG, WebP. Máx 2MB.</p>
+          <div class="settings-avatar">{{ userInitials }}</div>          
         </div>
 
         <!-- Formulario -->
@@ -66,6 +61,7 @@
               class="form-control"
               [class.is-invalid]="email.invalid && email.touched"
               [formControl]="email"
+              readonly
             >
             <span class="form-error" *ngIf="email.touched && email.hasError('email')">Correo inválido.</span>
           </div>

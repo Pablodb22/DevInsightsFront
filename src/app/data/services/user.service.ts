@@ -20,4 +20,17 @@ export class UserService {
             }
         });
     }
+
+    updateUser(data: any): Observable<any> {        
+        return this.http.put<any>(`${this.apiUrl}/users`,data);
+    }
+
+    updatePass(data:any): Observable<any> {
+        return this.http.put<any>(`${this.apiUrl}/users/password`,data);
+    }
+
+    updateToken(data:any): Observable<any> {
+        return this.http.put<any>(`${this.apiUrl}/users/token`,data);
+    }
+           
 }   
