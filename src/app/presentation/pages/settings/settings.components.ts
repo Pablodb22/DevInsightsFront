@@ -43,6 +43,11 @@ export class SettingsComponent implements OnInit {
   githubToken = '';
   tokenError  = '';
 
+  //Error
+  errorProfile  = '';
+  errorPassword = '';
+  errorToken    = '';
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute
@@ -111,9 +116,9 @@ export class SettingsComponent implements OnInit {
         this.savedProfile  = true;
       },
       error: (error) => {
-        this.savingProfile = true;
+        this.savingProfile = false;
         this.savedProfile  = false;
-        console.error('Error al actualizar el perfil:', error);
+        this.errorProfile  = error.error?.message || 'Error al guardar el perfil.';
       }
     });                
   }
@@ -137,9 +142,9 @@ export class SettingsComponent implements OnInit {
          this.securityForm.reset();
       },
       error: (error) => {
-        this.savingPassword = true;
+        this.savingPassword = false;
         this.savedPassword  = false;
-        console.error('Error al actualizar la contraseña:', error);
+        this.errorPassword  = error.error?.message || 'Error al guardar la contraseña.';
       }
     });
      
@@ -166,9 +171,9 @@ export class SettingsComponent implements OnInit {
         this.savedToken  = true;
       },
       error: (error) => {
-        this.savingToken = true;
+        this.savingToken = false;
         this.savedToken  = false;
-        console.error('Error al actualizar el token:', error);
+        this.tokenError  = error.error?.message || 'Error al guardar el token.';
       }
     });
       

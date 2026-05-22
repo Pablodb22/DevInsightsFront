@@ -90,6 +90,10 @@
               <i class="bi bi-check-circle-fill"></i>
               Cambios guardados correctamente.
             </div>
+            <div class="save-error" *ngIf="errorProfile">
+              <i class="bi bi-x-circle-fill"></i>
+              {{ errorProfile }}
+            </div>
             <button type="submit" class="btn-primary" [disabled]="savingProfile">
               <span *ngIf="!savingProfile">
                 <i class="bi bi-floppy"></i>
@@ -180,6 +184,10 @@
           <div class="save-success" *ngIf="savedPassword">
             <i class="bi bi-check-circle-fill"></i>
             Contraseña actualizada.
+          </div>
+          <div class="save-error" *ngIf="errorPassword">
+            <i class="bi bi-x-circle-fill"></i>
+            {{ errorPassword }}
           </div>
           <button type="submit" class="btn-primary" [disabled]="savingPassword">
             <span *ngIf="!savingPassword">
