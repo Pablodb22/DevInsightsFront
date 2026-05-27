@@ -6,6 +6,7 @@ import { DashboardComponent } from './presentation/pages/dashboard/dashboard.com
 import { SettingsComponent }  from './presentation/pages/settings/settings.components';
 import { authGuard } from './core/guards/auth.guard';
 import { dataSettingsResolver } from './core/resolver/data-settings.resolver';
+import { dataDashboardResolver } from './core/resolver/data-dashboard.resolver';
 
 
 export const routes: Routes = [
@@ -15,7 +16,8 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
+    resolve:{user: dataDashboardResolver}
   },
   {
     path: 'settings',

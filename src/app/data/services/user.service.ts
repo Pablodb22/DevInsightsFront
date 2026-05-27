@@ -32,5 +32,13 @@ export class UserService {
     updateToken(data:any): Observable<any> {
         return this.http.put<any>(`${this.apiUrl}/users/token`,data);
     }
+
+    getDataGit(token:any): Observable<any> {
+        return this.http.get<any>(`${this.apiUrl}/github/data`, {
+            headers: {
+            Authorization: `Bearer ${token}`
+            }
+        });
+    }
            
 }   
