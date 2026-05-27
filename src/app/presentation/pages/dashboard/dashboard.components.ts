@@ -15,6 +15,9 @@ export class DashboardComponent implements OnInit {
   userInitials = '';
 
   repos: any[] = [];
+  totalRepos = 0;
+  starsTotal = 0;
+  forksTotal = 0;
 
   repoInput = '';
   isAnalyzing = false;
@@ -54,13 +57,7 @@ export class DashboardComponent implements OnInit {
     },
   ];
 
-  activityBars = [
-    { label: 'Jan', value: 10, max: 40 },
-    { label: 'Feb', value: 20, max: 40 },
-    { label: 'Mar', value: 30, max: 40 },
-    { label: 'Apr', value: 25, max: 40 },
-    { label: 'May', value: 35, max: 40 },
-  ];
+
 
   constructor(private route: ActivatedRoute) {}
 
@@ -70,6 +67,18 @@ export class DashboardComponent implements OnInit {
     if (!data) return;
 
     this.repos = data;
+    this.totalRepos = data.length;
+    this.starsTotal = this.repos.reduce(
+      (sum, repo) => sum + this.getRepoStars(repo),
+      0
+    );
+    this.forksTotal = this.repos.reduce(
+      (sum, repo) => sum + this.getRepoForks(repo),
+      0
+    );
+    this.metrics[0].value = this.totalRepos;
+    this.metrics[1].value = this.starsTotal;
+    this.metrics[2].value = this.forksTotal;
 
     if (data.length > 0) {
       this.userName = data[0].owner.login;
@@ -81,6 +90,14 @@ export class DashboardComponent implements OnInit {
 
   formatStars(n: number): string {
     return n >= 1000 ? (n / 1000).toFixed(1) + 'k' : n.toString();
+  }
+
+  getRepoStars(repo: any): number {
+    return repo.stargazers_count ?? repo.stargazers ?? repo.stars ?? 0;
+  }
+
+  getRepoForks(repo: any): number {
+    return repo.forks_count ?? repo.forks ?? 0;
   }
 
   analyzeRepo(): void {
