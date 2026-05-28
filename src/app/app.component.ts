@@ -20,6 +20,9 @@ export class AppComponent implements OnInit {
   // Estado del dropdown de usuario
   dropdownOpen = false;
 
+  // Título que muestra la página activa en el header
+  pageTitle = '';
+
   // Datos del usuario (vendrían del AuthService)
   userName  = 'Carlos López';
   userEmail = 'carlos@ejemplo.com';
@@ -33,6 +36,11 @@ export class AppComponent implements OnInit {
       .subscribe((e: any) => {
         this.showNavbar = !this.hideNavbarRoutes.includes(e.urlAfterRedirects);
         this.dropdownOpen = false;
+        const url = e.urlAfterRedirects || '';
+        if (url.startsWith('/dashboard')) this.pageTitle = 'Dashboard';
+        else if (url.startsWith('/settings')) this.pageTitle = 'Configuración';
+        else if (url.startsWith('/repositorio')) this.pageTitle = 'Repositorio';
+        else this.pageTitle = '';
       });
   }
 

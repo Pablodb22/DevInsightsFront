@@ -2,12 +2,13 @@ import { ResolveFn } from '@angular/router';
 import { inject } from '@angular/core';
 import { UserService } from '../../data/services/user.service';
 import { catchError, map, of } from 'rxjs';
+import { GithubService } from '../../data/services/github.service';
 
 
 
 export const dataDashboardResolver: ResolveFn<any> = (route, state) => { 
   
-  const userService = inject(UserService);
+  const getService = inject(GithubService);
   const token = localStorage.getItem('token');
     
 
@@ -16,7 +17,7 @@ export const dataDashboardResolver: ResolveFn<any> = (route, state) => {
     return of([]);
   }
 
-  return userService.getDataGit(token).pipe(
+  return getService.getDataGit(token).pipe(
     map((data: any) => {
       console.log('✅ Datos recibidos:', data);
       return data;

@@ -19,3 +19,28 @@
   font-family: var(--font-sans);
   font-size: var(--text-sm);
 }
+
+/* Layout helpers for refactored navbar */
+.navbar-left { display: flex; align-items: center; gap: 12px; }
+.navbar-center { flex: 1; display: flex; justify-content: center; }
+.navbar-title { font-size: var(--text-md); color: var(--color-text-muted); font-weight: 600; }
+
+/* Label-style button for user/tenant text (replaces icon) */
+.navbar-label-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-text);
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+}
+.navbar-label-btn:hover {
+  background: var(--color-bg);
+  border-color: var(--color-border);
+}

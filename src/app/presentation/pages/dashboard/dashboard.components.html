@@ -6,29 +6,47 @@
   <!-- ── Sidebar ─────────────────────────────────────────── -->
   <aside class="sidebar">
 
-    <!-- Usuario -->
-    <div class="sidebar-user">
-      <div class="sidebar-avatar">{{ userInitials }}</div>
-      <div class="sidebar-user-info">
-        <span class="sidebar-user-name">{{ userName }}</span>
-        <span class="sidebar-user-email">{{ userEmail }}</span>
-      </div>
-    </div>
+<!-- Usuario -->
+<div class="sidebar-user" style="position: relative;">
+  <div
+    class="sidebar-avatar"
+    (click)="toggleUserMenu()"
+    style="cursor: pointer;"
+  >
+    {{ userInitials }}
+  </div>
+  <div
+    class="sidebar-user-info"
+    (click)="toggleUserMenu()"
+    style="cursor: pointer;"
+  >
+    <span class="sidebar-user-name">{{ userName }}</span>
+    <span class="sidebar-user-email">{{ userEmail }}</span>
+  </div>
 
+  <!-- Overlay para cerrar al hacer click fuera -->
+  <div
+    *ngIf="showUserMenu"
+    (click)="showUserMenu = false"
+    style="position: fixed; inset: 0; z-index: 99;"
+  ></div>
+
+  <!-- Menú desplegable -->
+  <div *ngIf="showUserMenu" class="user-dropdown">
+    <button class="user-dropdown-item" (click)="goToSettings()">
+      <i class="bi bi-gear"></i>
+      Configuración
+    </button>
+    <hr class="user-dropdown-divider">
+    <button class="user-dropdown-item user-dropdown-item--danger" (click)="logout()">
+      <i class="bi bi-box-arrow-right"></i>
+      Cerrar sesión
+    </button>
+  </div>
+</div>
     <hr class="divider">
 
-    <!-- Navegación -->
-    <nav class="sidebar-nav" aria-label="Navegación principal">
-      <a
-        *ngFor="let item of navItems"
-        [routerLink]="item.route"
-        class="sidebar-nav-item"
-        [class.active]="item.active"
-      >
-        <i [class]="'bi ' + item.icon"></i>
-        {{ item.label }}
-      </a>
-    </nav>
+
 
     <!-- Footer del sidebar -->
     <div class="sidebar-footer">
@@ -87,6 +105,7 @@
             </span>
           </button>
         </div>
+        <p class="form-error" *ngIf="searchError">{{ searchError }}</p>
       </div>
     </section>
 
@@ -127,9 +146,9 @@
           <div class="repo-card-header">
 
             <a
-              [href]="repo.html_url"
-              target="_blank"
+              (click)="navigateToRepo(repo.owner.login, repo.name)"
               class="repo-name"
+              style="cursor: pointer;"
             >
               <i class="bi bi-folder2"></i>
               {{ repo.name }}
@@ -173,12 +192,7 @@
             </span>
 
           </div>
-
-          <!-- Último commit -->
-          <div class="repo-commit text-xs text-muted">
-            <i class="bi bi-clock-history"></i>
-            Último commit {{ repo.lastCommit }}
-          </div>
+          
 
         </div>
       </div>

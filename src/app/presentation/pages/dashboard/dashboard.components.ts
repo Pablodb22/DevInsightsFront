@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -20,46 +21,17 @@ export class DashboardComponent implements OnInit {
   forksTotal = 0;
 
   repoInput = '';
+  searchError = '';
   isAnalyzing = false;
+  showUserMenu = false;
+
   metrics = [
-    {
-      label: 'Total repos',
-      value: 0,
-      icon: 'bi-folder2',
-      suffix: '',
-    },
-    {
-      label: 'Stars totales',
-      value: 0,
-      icon: 'bi-star',
-      suffix: '',
-    },
-    {
-      label: 'Forks totales',
-      value: 0,
-      icon: 'bi-git',
-      suffix: '',
-    },
-  ];
-  navItems = [
-    { icon: 'bi-grid', label: 'Dashboard', route: '/dashboard', active: true },
-    {
-      icon: 'bi-folder2-open',
-      label: 'Repositorios',
-      route: '/dashboard',
-      active: false,
-    },
-    {
-      icon: 'bi-gear',
-      label: 'Configuración',
-      route: '/settings',
-      active: false,
-    },
+    { label: 'Total repos', value: 0, icon: 'bi-folder2', suffix: '' },
+    { label: 'Stars totales', value: 0, icon: 'bi-star', suffix: '' },
+    { label: 'Forks totales', value: 0, icon: 'bi-git', suffix: '' },
   ];
 
-
-
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     const data = this.route.snapshot.data['user'];
@@ -83,9 +55,22 @@ export class DashboardComponent implements OnInit {
     if (data.length > 0) {
       this.userName = data[0].owner.login;
       this.userEmail = data[0].owner.login;
-
       this.userInitials = this.userName.substring(0, 2).toUpperCase();
     }
+  }
+
+  toggleUserMenu(): void {
+    this.showUserMenu = !this.showUserMenu;
+  }
+
+  logout(): void {
+    localStorage.removeItem('github_token');
+    this.router.navigate(['/login']);
+  }
+
+  goToSettings(): void {
+    this.showUserMenu = false;
+    this.router.navigate(['/settings']);
   }
 
   formatStars(n: number): string {
@@ -100,8 +85,25 @@ export class DashboardComponent implements OnInit {
     return repo.forks_count ?? repo.forks ?? 0;
   }
 
+  navigateToRepo(owner: string, repoName: string): void {
+    this.router.navigate(['/repositorio', owner, repoName]);
+  }
+
   analyzeRepo(): void {
-    console.log(this.repoInput);
+    const repo = this.repoInput.trim();
+    if (!repo) {
+      this.searchError = 'Introduce un repositorio en formato usuario/repositorio.';
+      return;
+    }
+
+    const [owner, repoName] = repo.split('/').map((part) => part.trim());
+    if (!owner || !repoName) {
+      this.searchError = 'Formato inválido. Debe ser usuario/repositorio.';
+      return;
+    }
+
+    this.searchError = '';
+    this.router.navigate(['/repositorio', owner, repoName]);
   }
 
   barHeightPercent(bar: any): number {

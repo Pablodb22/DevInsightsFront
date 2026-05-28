@@ -1,0 +1,199 @@
+<div class="repo-page">
+  <div class="repo-page-header surface">
+    <button class="btn-ghost" (click)="goBack()">
+      <i class="bi bi-arrow-left"></i>
+      Volver
+    </button>
+
+    <div class="repo-header-title">
+      <span class="repo-path">{{ owner }} / <strong>{{ repoName }}</strong></span>
+      <h1>{{ repo?.name || 'Detalles del repositorio' }}</h1>
+      <p class="repo-subtitle">
+        {{ repo?.description || 'Información completa y métricas esenciales del repositorio.' }}
+      </p>
+    </div>
+
+    <button class="btn-secondary" (click)="openGitHub()" [disabled]="!repo">
+      <i class="bi bi-box-arrow-up-right"></i>
+      Abrir en GitHub
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="repo-loading surface">
+    <div class="loader-row">
+      <span class="spinner-sm"></span>
+      Cargando detalles del repositorio...
+    </div>
+  </div>
+
+  <div *ngIf="error" class="repo-error surface">
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="repo && !isLoading && !error" class="repo-grid">
+    <section class="repo-overview surface">
+      <div class="repo-overview-top">
+        <div class="repo-avatar">
+          <img [src]="repo.owner.avatar_url" alt="Avatar {{ repo.owner.login }}" />
+        </div>
+
+        <div class="repo-summary">
+          <span class="repo-status">{{ repo.private ? 'Privado' : 'Público' }}</span>
+          <h2>{{ repo.full_name }}</h2>
+          <p class="repo-description">{{ repo.description || 'Sin descripción disponible.' }}</p>
+
+          <div class="repo-tags">
+            <span *ngIf="repo.language" class="badge badge-tag">
+              <span class="lang-dot"></span>
+              {{ repo.language }}
+            </span>
+            <span *ngIf="repo.license?.name" class="badge">
+              {{ repo.license.name }}
+            </span>
+            <span class="badge" *ngIf="repo.archived">Archivado</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="repo-stats-grid">
+        <div class="stat-card">
+          <span>Stars</span>
+          <strong>{{ formatNumber(repo.stargazers_count || 0) }}</strong>
+        </div>
+        <div class="stat-card">
+          <span>Forks</span>
+          <strong>{{ formatNumber(repo.forks_count || 0) }}</strong>
+        </div>
+        <div class="stat-card">
+          <span>Watchers</span>
+          <strong>{{ formatNumber(repo.watchers_count || 0) }}</strong>
+        </div>
+        <div class="stat-card">
+          <span>Suscriptores</span>
+          <strong>{{ formatNumber(repo.subscribers_count || 0) }}</strong>
+        </div>
+        <div class="stat-card">
+          <span>Issues abiertos</span>
+          <strong>{{ formatNumber(repo.open_issues_count || 0) }}</strong>
+        </div>
+        <div class="stat-card">
+          <span>Tamaño</span>
+          <strong>{{ formatSize(repo.size) }}</strong>
+        </div>
+      </div>
+
+      <div class="repo-insights">
+        <h3>Insights rápidos</h3>
+        <div class="insights-grid">
+          <div class="insight-card">
+            <span>Actividad</span>
+            <p>{{ getActivityLabel() }}</p>
+          </div>
+          <div class="insight-card">
+            <span>Popularidad</span>
+            <p>{{ getStarForkRatio() }}</p>
+          </div>
+          <div class="insight-card">
+            <span>Salud</span>
+            <p>{{ getHealthLabel() }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="repo-details surface">
+      <h3>Detalles del repositorio</h3>
+      <div class="repo-details-grid">
+        <div class="detail-item">
+          <span>Owner</span>
+          <p>
+            <a [href]="repo.owner.html_url" target="_blank" rel="noopener">
+              {{ repo.owner.login }}
+            </a>
+            · {{ repo.owner.type }}
+          </p>
+        </div>
+        <div class="detail-item">
+          <span>Visibilidad</span>
+          <p>{{ repo.visibility || (repo.private ? 'Privado' : 'Público') }}</p>
+        </div>
+        <div class="detail-item">
+          <span>Branch por defecto</span>
+          <p>{{ repo.default_branch }}</p>
+        </div>
+        <div class="detail-item">
+          <span>Lenguaje principal</span>
+          <p>{{ repo.language || 'N/A' }}</p>
+        </div>
+        <div class="detail-item">
+          <span>Licencia</span>
+          <p>{{ repo.license?.name || 'Sin licencia' }}</p>
+        </div>
+        <div class="detail-item">
+          <span>Repositorio</span>
+          <p>
+            <a [href]="repo.html_url" target="_blank" rel="noopener">{{ repo.html_url }}</a>
+          </p>
+        </div>
+        <div class="detail-item">
+          <span>Clonación HTTPS</span>
+          <p>{{ repo.clone_url }}</p>
+        </div>
+        <div class="detail-item">
+          <span>Clonación SSH</span>
+          <p>{{ repo.ssh_url }}</p>
+        </div>
+        <div class="detail-item">
+          <span>Homepage</span>
+          <p>
+            <a *ngIf="repo.homepage" [href]="repo.homepage" target="_blank" rel="noopener">
+              {{ repo.homepage }}
+            </a>
+            <span *ngIf="!repo.homepage">No disponible</span>
+          </p>
+        </div>
+        <div class="detail-item">
+          <span>Creado</span>
+          <p>{{ formatDate(repo.created_at) }}</p>
+        </div>
+        <div class="detail-item">
+          <span>Último push</span>
+          <p>{{ formatDate(repo.pushed_at) }}</p>
+        </div>
+        <div class="detail-item">
+          <span>Última actualización</span>
+          <p>{{ formatDate(repo.updated_at) }}</p>
+        </div>
+      </div>
+
+      <div class="repo-flags-grid">
+        <div class="flag-pill" [class.active]="repo.has_issues">Issues</div>
+        <div class="flag-pill" [class.active]="repo.has_projects">Proyectos</div>
+        <div class="flag-pill" [class.active]="repo.has_wiki">Wiki</div>
+        <div class="flag-pill" [class.active]="repo.has_downloads">Descargas</div>
+        <div class="flag-pill" [class.active]="repo.has_pages">Pages</div>
+        <div class="flag-pill" [class.active]="!repo.archived">Activo</div>
+      </div>
+
+      <div class="repo-quick-links">
+        <h4>Enlaces rápidos</h4>
+        <div class="quick-links-row">
+          <a class="repo-link" [href]="repo.html_url" target="_blank" rel="noopener">Código</a>
+          <a class="repo-link" [href]="repo.html_url + '/issues'" target="_blank" rel="noopener">Issues</a>
+          <a class="repo-link" [href]="repo.html_url + '/pulls'" target="_blank" rel="noopener">Pull requests</a>
+          <a class="repo-link" [href]="repo.html_url + '/actions'" target="_blank" rel="noopener">Actions</a>
+          <a class="repo-link" [href]="repo.html_url + '/wiki'" target="_blank" rel="noopener">Wiki</a>
+          <a class="repo-link" [href]="repo.html_url + '/releases'" target="_blank" rel="noopener">Releases</a>
+          <a class="repo-link" *ngIf="repo.has_pages" [href]="'https://' + repo.owner.login + '.github.io/' + repo.name" target="_blank" rel="noopener">GitHub Pages</a>
+        </div>
+      </div>
+
+      <div class="repo-topic-list" *ngIf="repo.topics?.length">
+        <span class="topic-label">Topics</span>
+        <div class="topics-row">
+          <span class="badge badge-tag" *ngFor="let topic of repo.topics">{{ topic }}</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
